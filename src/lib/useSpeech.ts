@@ -1,6 +1,58 @@
 import { useState, useCallback, useRef } from 'react'
 import { useAppStore } from '../store/useAppStore'
 
+// Web Speech API の型定義
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string
+  message?: string
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number
+  results: SpeechRecognitionResultList
+}
+
+interface SpeechRecognitionResultList {
+  length: number
+  item(index: number): SpeechRecognitionResult
+  [index: number]: SpeechRecognitionResult
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean
+  length: number
+  item(index: number): SpeechRecognitionAlternative
+  [index: number]: SpeechRecognitionAlternative
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string
+  confidence: number
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  start(): void
+  stop(): void
+  onstart: ((this: SpeechRecognition, ev: Event) => any) | null
+  onend: ((this: SpeechRecognition, ev: Event) => any) | null
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null
+  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any) | null
+}
+
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognition
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: SpeechRecognitionConstructor
+    webkitSpeechRecognition?: SpeechRecognitionConstructor
+  }
+}
+
 interface UseSpeechReturn {
   startListening: () => void
   stopListening: () => void
@@ -27,8 +79,13 @@ export const useSpeech = (): UseSpeechReturn => {
     }
 
     try {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-      recognitionRef.current = new SpeechRecognition()
+      const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition
+      if (!SpeechRecognitionClass) {
+        setError('音声認識が利用できません')
+        return
+      }
+      
+      recognitionRef.current = new SpeechRecognitionClass()
       
       recognitionRef.current.continuous = true
       recognitionRef.current.interimResults = true
@@ -40,7 +97,7 @@ export const useSpeech = (): UseSpeechReturn => {
         setError(null)
       }
 
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         let finalTranscript = ''
         
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -54,7 +111,7 @@ export const useSpeech = (): UseSpeechReturn => {
         }
       }
 
-      recognitionRef.current.onerror = (event) => {
+      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
         setError(`音声認識エラー: ${event.error}`)
         setListening(false)
         setRecording(false)
@@ -89,13 +146,5 @@ export const useSpeech = (): UseSpeechReturn => {
     transcript,
     isSupported,
     error
-  }
-}
-
-// Web Speech API の型定義
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition
-    webkitSpeechRecognition: typeof SpeechRecognition
   }
 } 

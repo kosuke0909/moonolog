@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { Moon } from '../components/Moon'
 import { TopicTitle, Phrases } from '../components/TopicCard'
+import { RecordingDebug } from '../components/RecordingDebug'
+import { RecordingList } from '../components/RecordingList'
 import { Footer } from '../components/Footer'
 import { useAppStore } from '../store/useAppStore'
 import { getTodaysTopic } from '../lib/topics'
@@ -86,6 +88,16 @@ export default function Home() {
           {/* フレーズ */}
           <div className="w-full max-w-sm">
             <Phrases topic={currentTopic} />
+          </div>
+
+          {/* 録音一覧 */}
+          <div className="w-full max-w-sm">
+            <RecordingList />
+          </div>
+
+          {/* 録音デバッグ情報 */}
+          <div className="w-full max-w-sm">
+            <RecordingDebug />
           </div>
         </main>
 

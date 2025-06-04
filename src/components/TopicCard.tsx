@@ -35,25 +35,25 @@ export const TopicTitle: React.FC<TopicTitleProps> = ({ topic, className = '' })
 export const Phrases: React.FC<PhrasesProps> = ({ topic, className = '' }) => {
   if (!topic) {
     return (
-      <div className={`bg-white/10 backdrop-blur-sm rounded-xl p-4 ${className}`}>
-        <div className="animate-pulse space-y-3">
-          <div className="h-4 bg-white/15 rounded"></div>
-          <div className="h-4 bg-white/15 rounded"></div>
-          <div className="h-4 bg-white/15 rounded"></div>
+      <div className={`bg-white/10 backdrop-blur-sm rounded-xl p-6 ${className}`}>
+        <div className="animate-pulse space-y-4">
+          <div className="h-6 bg-white/15 rounded"></div>
+          <div className="h-6 bg-white/15 rounded"></div>
+          <div className="h-6 bg-white/15 rounded"></div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className={`bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 ${className}`}>
-      <div className="space-y-3">
+    <div className={`bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 ${className}`}>
+      <div className="space-y-4">
         {topic.examples.map((example, index) => (
           <div 
             key={index}
-            className="bg-white/10 rounded-lg p-3 border border-white/10 min-h-[44px] flex items-center"
+            className="bg-white/10 rounded-lg p-4 border border-white/10 min-h-[60px] flex items-center"
           >
-            <p className="text-indigo-100 text-sm leading-relaxed">
+            <p className="text-indigo-100 text-base leading-relaxed font-medium">
               "{example}"
             </p>
           </div>

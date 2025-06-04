@@ -8,6 +8,14 @@ export interface Topic {
   examples: string[]
 }
 
+export interface Recording {
+  id: string
+  audioBase64: string
+  timestamp: number
+  duration: number
+  topicTitle: string
+}
+
 interface AppStore {
   // 録音状態
   isListening: boolean
@@ -24,6 +32,9 @@ interface AppStore {
   // Hydration状態
   hasHydrated: boolean
   
+  // 録音データ
+  recordings: Recording[]
+  
   // アクション
   setListening: (listening: boolean) => void
   setRecording: (recording: boolean) => void
@@ -31,6 +42,11 @@ interface AppStore {
   updateStreak: () => void
   resetStreak: () => void
   setHasHydrated: (hasHydrated: boolean) => void
+  
+  // 録音データのアクション
+  addRecording: (audioBase64: string, duration: number) => void
+  removeRecording: (id: string) => void
+  clearAllRecordings: () => void
 }
 
 export const useAppStore = create<AppStore>()(
@@ -44,6 +60,7 @@ export const useAppStore = create<AppStore>()(
       totalSessions: 0,
       currentTopic: null,
       hasHydrated: false,
+      recordings: [],
 
       // アクション
       setListening: (listening: boolean) => set({ isListening: listening }),
@@ -78,7 +95,32 @@ export const useAppStore = create<AppStore>()(
         totalSessions: 0 
       }),
       
-      setHasHydrated: (hasHydrated: boolean) => set({ hasHydrated })
+      setHasHydrated: (hasHydrated: boolean) => set({ hasHydrated }),
+      
+      // 録音データのアクション
+      addRecording: (audioBase64: string, duration: number) => {
+        const { recordings, currentTopic } = get()
+        const newRecording: Recording = {
+          id: Date.now().toString(),
+          audioBase64,
+          timestamp: Date.now(),
+          duration,
+          topicTitle: currentTopic?.title || 'Unknown Topic'
+        }
+        
+        // 最大5個まで保存（古いものから削除）
+        const updatedRecordings = [newRecording, ...recordings].slice(0, 5)
+        
+        set({ recordings: updatedRecordings })
+      },
+      
+      removeRecording: (id: string) => {
+        const { recordings } = get()
+        const updatedRecordings = recordings.filter(recording => recording.id !== id)
+        set({ recordings: updatedRecordings })
+      },
+      
+      clearAllRecordings: () => set({ recordings: [] })
     }),
     {
       name: 'moonolog-storage',
@@ -95,7 +137,8 @@ export const useAppStore = create<AppStore>()(
       partialize: (state) => ({
         streak: state.streak,
         lastSpokenDate: state.lastSpokenDate,
-        totalSessions: state.totalSessions
+        totalSessions: state.totalSessions,
+        recordings: state.recordings
       }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true)

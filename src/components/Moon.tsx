@@ -2,24 +2,50 @@
 
 import { useAppStore } from '../store/useAppStore'
 import { useSpeech } from '../lib/useSpeech'
+import { useAudioRecorder } from '../lib/useAudioRecorder'
+import { useEffect } from 'react'
 
 interface MoonProps {
   className?: string
 }
 
 export const Moon: React.FC<MoonProps> = ({ className = '' }) => {
-  const { isListening, isRecording } = useAppStore()
-  const { startListening, stopListening, isSupported, error } = useSpeech()
+  const { isListening, isRecording, addRecording } = useAppStore()
+  const { startListening, stopListening, isSupported: speechSupported, error: speechError } = useSpeech()
+  const { 
+    startRecording, 
+    stopRecording, 
+    isRecording: isAudioRecording, 
+    audioBase64,
+    recordingDuration,
+    isSupported: audioSupported,
+    error: audioError 
+  } = useAudioRecorder()
 
-  const handleMoonClick = () => {
-    if (!isSupported) return
+  // 録音完了時にストアに保存
+  useEffect(() => {
+    if (audioBase64 && recordingDuration > 0 && !isAudioRecording) {
+      addRecording(audioBase64, recordingDuration)
+    }
+  }, [audioBase64, recordingDuration, isAudioRecording, addRecording])
+
+  const handleMoonClick = async () => {
+    if (!speechSupported && !audioSupported) return
     
-    if (isListening) {
-      stopListening()
+    if (isListening || isAudioRecording) {
+      // 録音停止
+      if (speechSupported) stopListening()
+      if (audioSupported) stopRecording()
     } else {
-      startListening()
+      // 録音開始
+      if (speechSupported) startListening()
+      if (audioSupported) await startRecording()
     }
   }
+
+  const isRecordingActive = isListening || isAudioRecording
+  const hasError = speechError || audioError
+  const isSupported = speechSupported || audioSupported
 
   return (
     <div className={`relative ${className}`}>
@@ -29,7 +55,7 @@ export const Moon: React.FC<MoonProps> = ({ className = '' }) => {
         disabled={!isSupported}
         className={`
           w-48 h-48 rounded-full relative transition-all duration-300 
-          ${isListening 
+          ${isRecordingActive
             ? 'bg-gradient-to-br from-yellow-200 via-yellow-300 to-yellow-400 shadow-2xl' 
             : 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400'
           }
@@ -44,20 +70,27 @@ export const Moon: React.FC<MoonProps> = ({ className = '' }) => {
         <div className="absolute bottom-12 left-8 w-3 h-3 bg-gray-400 rounded-full opacity-25" />
         <div className="absolute top-20 left-20 w-2 h-2 bg-gray-400 rounded-full opacity-35" />
         <div className="absolute bottom-16 right-12 w-3 h-3 bg-gray-400 rounded-full opacity-25" />
+        
+        {/* 録音状態の視覚的フィードバック */}
+        {isRecordingActive && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-4xl animate-pulse">🎤</div>
+          </div>
+        )}
       </button>
       
-      {/* エラーメッセージのみ表示 */}
-      {(error || !isSupported) && (
+      {/* エラーメッセージ */}
+      {(hasError || !isSupported) && (
         <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center max-w-xs">
-          {error && (
+          {hasError && (
             <p className="text-red-300 text-sm">
-              {error}
+              {speechError || audioError}
             </p>
           )}
           
           {!isSupported && (
             <p className="text-indigo-200 text-sm">
-              音声認識がサポートされていません
+              音声機能がサポートされていません
             </p>
           )}
         </div>
