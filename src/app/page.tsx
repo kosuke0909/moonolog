@@ -5,7 +5,6 @@ import { Moon } from '../components/Moon'
 import { TopicTitle, Phrases } from '../components/TopicCard'
 import { RecordingDebug } from '../components/RecordingDebug'
 import { RecordingList } from '../components/RecordingList'
-import { Footer } from '../components/Footer'
 import { useAppStore } from '../store/useAppStore'
 import { getTodaysTopic } from '../lib/topics'
 
@@ -118,11 +117,6 @@ export default function Home() {
             </div>
           )}
         </main>
-
-        {/* フッター */}
-        <div className="px-4 pb-8">
-          <Footer />
-        </div>
       </div>
 
       {/* デバッグモード表示インジケーター */}
