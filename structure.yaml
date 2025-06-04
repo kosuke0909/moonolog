@@ -1,0 +1,26 @@
+moonolog-app/
+  ├── app/                       # App Router 構成ルート
+  │   ├── layout.tsx            # 全体のレイアウト
+  │   ├── page.tsx              # トップページ (MVPのメイン)
+  │   └── globals.css           # グローバルスタイル
+  ├── components/               # UIコンポーネント群
+  │   ├── Moon.tsx              # 月のアニメーション（Riveコンポーネント）
+  │   ├── TopicCard.tsx         # お題と例文表示
+  │   ├── MicButton.tsx         # マイクボタン
+  │   └── Footer.tsx            # フッターや小要素
+  ├── lib/                      # ロジックやユーティリティ
+  │   ├── useSpeech.ts          # 音声録音・認識用フック
+  │   ├── useStreak.ts          # 習慣管理（localStorage）
+  │   └── topics.ts             # トピック読み込みロジック
+  ├── public/                   # 静的ファイル（画像やRiveファイル）
+  │   ├── moon_idle.riv
+  │   └── topics.json           # MVP用お題データ
+  ├── styles/                   # 必要であればカスタムCSS
+  │   └── moonolog.css
+  ├── store/                    # Zustand状態管理
+  │   └── useAppStore.ts        # アプリ全体の状態（話してるかなど）
+  ├── tsconfig.json             # TypeScript設定
+  ├── tailwind.config.ts        # Tailwind CSS設定
+  ├── postcss.config.js         # PostCSS設定
+  ├── package.json              # 依存関係
+  └── README.md

@@ -1,0 +1,74 @@
+{
+  "topics": [
+    {
+      "id": 1,
+      "title": "My dream job",
+      "description": "将来の夢の仕事について話してみましょう",
+      "examples": [
+        "If I could have any job, I would...",
+        "My ideal workplace would be...",
+        "I'm passionate about... because..."
+      ]
+    },
+    {
+      "id": 2,
+      "title": "A perfect weekend",
+      "description": "理想的な週末について話してみましょう",
+      "examples": [
+        "On my perfect weekend, I would...",
+        "I love spending time...",
+        "The best way to relax is..."
+      ]
+    },
+    {
+      "id": 3,
+      "title": "My favorite food",
+      "description": "好きな食べ物について話してみましょう",
+      "examples": [
+        "My favorite dish is... because...",
+        "When I eat..., I feel...",
+        "I learned to cook... from..."
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Travel memories",
+      "description": "旅行の思い出について話してみましょう",
+      "examples": [
+        "The most beautiful place I've been to is...",
+        "I'll never forget when I...",
+        "Next time I travel, I want to..."
+      ]
+    },
+    {
+      "id": 5,
+      "title": "My hobby",
+      "description": "趣味について話してみましょう",
+      "examples": [
+        "I spend my free time...",
+        "What I love about my hobby is...",
+        "I started... because..."
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Childhood memories",
+      "description": "子供の頃の思い出について話してみましょう",
+      "examples": [
+        "When I was a child, I used to...",
+        "My favorite childhood memory is...",
+        "I learned... from my parents..."
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Future goals",
+      "description": "将来の目標について話してみましょう",
+      "examples": [
+        "In five years, I hope to...",
+        "My biggest goal is...",
+        "I'm working towards..."
+      ]
+    }
+  ]
+} 

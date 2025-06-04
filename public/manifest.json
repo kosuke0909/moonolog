@@ -1,0 +1,20 @@
+{
+  "name": "🌕 Moonolog - 英語独り言習慣化アプリ",
+  "short_name": "Moonolog",
+  "description": "毎晩、月に向かって英語を話そう",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1b4b",
+  "theme_color": "#6366f1",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["education", "lifestyle"],
+  "lang": "ja",
+  "dir": "ltr"
+} 
