@@ -35,6 +35,9 @@ interface AppStore {
   // 録音データ
   recordings: Recording[]
   
+  // デバッグモード
+  isDebugMode: boolean
+  
   // アクション
   setListening: (listening: boolean) => void
   setRecording: (recording: boolean) => void
@@ -47,6 +50,10 @@ interface AppStore {
   addRecording: (audioBase64: string, duration: number) => void
   removeRecording: (id: string) => void
   clearAllRecordings: () => void
+  
+  // デバッグモードのアクション
+  toggleDebugMode: () => void
+  setDebugMode: (debugMode: boolean) => void
 }
 
 export const useAppStore = create<AppStore>()(
@@ -61,6 +68,7 @@ export const useAppStore = create<AppStore>()(
       currentTopic: null,
       hasHydrated: false,
       recordings: [],
+      isDebugMode: false,
 
       // アクション
       setListening: (listening: boolean) => set({ isListening: listening }),
@@ -120,7 +128,12 @@ export const useAppStore = create<AppStore>()(
         set({ recordings: updatedRecordings })
       },
       
-      clearAllRecordings: () => set({ recordings: [] })
+      clearAllRecordings: () => set({ recordings: [] }),
+      
+      // デバッグモードのアクション
+      toggleDebugMode: () => set({ isDebugMode: !get().isDebugMode }),
+      
+      setDebugMode: (debugMode: boolean) => set({ isDebugMode: debugMode })
     }),
     {
       name: 'moonolog-storage',

@@ -17,7 +17,7 @@ interface Star {
 }
 
 export default function Home() {
-  const { currentTopic, setCurrentTopic } = useAppStore()
+  const { currentTopic, setCurrentTopic, isDebugMode, toggleDebugMode } = useAppStore()
   const [stars, setStars] = useState<Star[]>([])
   const [mounted, setMounted] = useState(false)
 
@@ -25,6 +25,22 @@ export default function Home() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // キーボードショートカットの監視
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Ctrl + Shift + D でデバッグモード切り替え
+      if (event.ctrlKey && event.shiftKey && event.key === 'D') {
+        event.preventDefault()
+        toggleDebugMode()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [toggleDebugMode])
 
   // 星を生成（クライアントサイドのみ）
   useEffect(() => {
@@ -95,10 +111,12 @@ export default function Home() {
             <RecordingList />
           </div>
 
-          {/* 録音デバッグ情報 */}
-          <div className="w-full max-w-sm">
-            <RecordingDebug />
-          </div>
+          {/* 録音デバッグ情報（デバッグモード時のみ表示） */}
+          {isDebugMode && (
+            <div className="w-full max-w-sm">
+              <RecordingDebug />
+            </div>
+          )}
         </main>
 
         {/* フッター */}
@@ -106,6 +124,13 @@ export default function Home() {
           <Footer />
         </div>
       </div>
+
+      {/* デバッグモード表示インジケーター */}
+      {isDebugMode && (
+        <div className="fixed top-4 right-4 bg-yellow-500/20 border border-yellow-500/40 rounded-lg px-3 py-1 text-yellow-200 text-xs z-50">
+          🐛 Debug Mode (Ctrl+Shift+D)
+        </div>
+      )}
     </div>
   )
 }
